@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rock Paper Scissors</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-image: url("https://img.freepik.com/free-photo/colorful-block-print-frame-beige-background_53876-104266.jpg");
+    background-size: cover;
+    background-position: center;
+    color: #222;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+    padding: 40px;
+}
+
+.side {
+    width: 25%;
+    text-align: center;
+}
+
+.choice {
+    display: block;
+    margin: 15px auto;
+    padding: 12px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #ffffffcc;
+    transition: 0.3s;
+}
+
+.choice:hover {
+    background: #ffd54f;
+}
+
+.center {
+    width: 40%;
+    text-align: center;
+}
+
+.timer {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.scoreboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.score {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.image {
+    width: 150px;
+}
+
+.result {
+    margin-top: 20px;
+    font-size: 20px;
+    min-height: 60px;
+}
+
+.controls {
+    margin-top: 20px;
+}
+
+.controls button {
+    padding: 8px 16px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Player -->
+    <div class="side">
+        <h2>You</h2>
+        <button class="choice" onclick="selectChoice('Rock')">Stone</button>
+        <button class="choice" onclick="selectChoice('Paper')">Paper</button>
+        <button class="choice" onclick="selectChoice('Scissors')">Scissor</button>
+    </div>
+
+    <!-- Center -->
+    <div class="center">
+
+        <div class="timer">
+            Time: <span id="time">3</span>
+        </div>
+
+        <div class="scoreboard">
+            <div class="score">You: <span id="playerScore">0</span></div>
+
+            <img class="image"
+            src="https://media.istockphoto.com/id/1269211670/vector/rock-paper-scissors-body-parts-icon-set.jpg?s=612x612&w=0&k=20&c=OSu0AGUV7Tq3-gotwwOywCRcv4OMrt7KqQMhI_tPZOw=">
+
+            <div class="score">Computer: <span id="computerScore">0</span></div>
+        </div>
+
+        <div class="result" id="result"></div>
+
+        <div class="controls">
+            <button onclick="startGame()">Start</button>
+            <button onclick="pauseGame()">Pause</button>
+            <button onclick="restartGame()">Restart</button>
+        </div>
+
+    </div>
+
+    <!-- Computer -->
+    <div class="side">
+        <h2>Computer</h2>
+        <button class="choice">Stone</button>
+        <button class="choice">Paper</button>
+        <button class="choice">Scissor</button>
+    </div>
+
+</div>
+
+<script>
+let playerScore = 0;
+let computerScore = 0;
+let playerChoice = null;
+let timeLeft = 3;
+let timer = null;
+let isPaused = false;
+let isRunning = false;
+
+function startGame() {
+    if (!isRunning) {
+        isRunning = true;
+        isPaused = false;
+        startTimer();
+    }
+}
+
+function pauseGame() {
+    if (isRunning) {
+        isPaused = !isPaused;
+        if (isPaused) {
+            clearInterval(timer);
+        } else {
+            startTimer();
+        }
+    }
+}
+
+function restartGame() {
+    clearInterval(timer);
+    playerScore = 0;
+    computerScore = 0;
+    playerChoice = null;
+    document.getElementById("playerScore").innerText = 0;
+    document.getElementById("computerScore").innerText = 0;
+    document.getElementById("result").innerHTML = "";
+    isRunning = false;
+    isPaused = false;
+    document.getElementById("time").innerText = 3;
+}
+
+function startTimer() {
+    timeLeft = 3;
+    document.getElementById("time").innerText = timeLeft;
+
+    timer = setInterval(() => {
+        if (!isPaused) {
+            timeLeft--;
+            document.getElementById("time").innerText = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                playRound();
+            }
+        }
+    }, 1000);
+}
+
+function selectChoice(choice) {
+    if (isRunning && !isPaused) {
+        playerChoice = choice;
+    }
+}
+
+function playRound() {
+    const choices = ["Rock", "Paper", "Scissors"];
+    const computerChoice = choices[Math.floor(Math.random() * 3)];
+    let result = "";
+
+    if (!playerChoice) {
+        result = "You didn't choose!";
+    } else if (playerChoice === computerChoice) {
+        result = "It's a Draw!";
+    } else if (
+        (playerChoice === "Rock" && computerChoice === "Scissors") ||
+        (playerChoice === "Paper" && computerChoice === "Rock") ||
+        (playerChoice === "Scissors" && computerChoice === "Paper")
+    ) {
+        result = "You Win!";
+        playerScore++;
+    } else {
+        result = "Computer Wins!";
+        computerScore++;
+    }
+
+    document.getElementById("result").innerHTML =
+        "You chose: " + (playerChoice || "None") + "<br>" +
+        "Computer chose: " + computerChoice + "<br><br>" +
+        result;
+
+    document.getElementById("playerScore").innerText = playerScore;
+    document.getElementById("computerScore").innerText = computerScore;
+
+    playerChoice = null;
+
+    if (isRunning && !isPaused) {
+        setTimeout(startTimer, 2000);
+    }
+}
+</script>
+
+</body>
+</html>
