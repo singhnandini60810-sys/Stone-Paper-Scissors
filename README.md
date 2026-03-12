@@ -1,6 +1,8 @@
 # Stone-Paper-Scissors
 Rock Paper Scissors – Timed Edition
 
+https://singhnandini60810-sys.github.io/Stone-Paper-Scissors/
+
 A browser-based Rock Paper Scissors game built using HTML, CSS, and JavaScript. This version features a 3-second countdown timer, side-by-side player and computer layout, scoreboard in the center, and start, pause, and restart controls.
 
 Features
